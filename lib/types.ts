@@ -17,8 +17,8 @@ export interface Theme {
   taken: number;
 }
 
-export type Semester = 3 | 5;
-export const SEMESTERS: readonly Semester[] = [3, 5];
+export type Semester = 1 | 3 | 5 | 7;
+export const SEMESTERS: readonly Semester[] = [1, 3, 5, 7];
 
 export interface Member {
   fullName: string;

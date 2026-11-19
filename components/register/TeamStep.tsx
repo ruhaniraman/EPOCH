@@ -1,6 +1,6 @@
 import { Frame } from "@/components/ui/Frame";
 import { SEMESTERS } from "@/lib/types";
-import { MAX_MEMBERS, type MemberDraft, type MemberErrors } from "@/lib/validation";
+import { idLabel, MAX_MEMBERS, type MemberDraft, type MemberErrors } from "@/lib/validation";
 import { SelectField, TextField } from "./Fields";
 
 export function TeamStep({
@@ -76,32 +76,6 @@ export function TeamStep({
                   autoComplete={i === 0 ? "name" : "off"}
                 />
               </div>
-              <TextField
-                id={`${pre}-usn`}
-                label="USN"
-                value={m.usn}
-                onChange={(ev) => onMember(i, "usn", ev.target.value.toUpperCase())}
-                onBlur={() => onBlur(`${pre}-usn`)}
-                error={e.usn}
-                autoComplete="off"
-                autoCapitalize="characters"
-                spellCheck={false}
-                placeholder="1DS23CD045"
-                maxLength={12}
-              />
-              <TextField
-                id={`${pre}-phone`}
-                label="Phone"
-                type="tel"
-                inputMode="numeric"
-                value={m.phone}
-                onChange={(ev) => onMember(i, "phone", ev.target.value.replace(/[^\d ]/g, ""))}
-                onBlur={() => onBlur(`${pre}-phone`)}
-                error={e.phone}
-                autoComplete={i === 0 ? "tel-national" : "off"}
-                placeholder="10 digits"
-                maxLength={11}
-              />
               <SelectField
                 id={`${pre}-semester`}
                 label="Semester"
@@ -117,6 +91,33 @@ export function TeamStep({
                   </option>
                 ))}
               </SelectField>
+              <TextField
+                id={`${pre}-usn`}
+                label={idLabel(m.semester)}
+                hint={m.semester === 1 ? "Sem 1 students: use your college admission ID." : undefined}
+                value={m.usn}
+                onChange={(ev) => onMember(i, "usn", ev.target.value.toUpperCase())}
+                onBlur={() => onBlur(`${pre}-usn`)}
+                error={e.usn}
+                autoComplete="off"
+                autoCapitalize="characters"
+                spellCheck={false}
+                placeholder={m.semester === 1 ? "Admission ID" : "1DS23CD045"}
+                maxLength={m.semester === 1 ? 20 : 12}
+              />
+              <TextField
+                id={`${pre}-phone`}
+                label="Phone"
+                type="tel"
+                inputMode="numeric"
+                value={m.phone}
+                onChange={(ev) => onMember(i, "phone", ev.target.value.replace(/[^\d ]/g, ""))}
+                onBlur={() => onBlur(`${pre}-phone`)}
+                error={e.phone}
+                autoComplete={i === 0 ? "tel-national" : "off"}
+                placeholder="10 digits"
+                maxLength={11}
+              />
             </div>
           </Frame>
         );

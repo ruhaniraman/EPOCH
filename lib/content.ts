@@ -76,7 +76,7 @@ export const RULE_CARDS = [
   },
   {
     title: "Three or four. One lead.",
-    body: "Teams of 3 or 4 members with exactly one team lead. A USN can only be in one team, so no double-dipping.",
+    body: "Teams of 3 or 4 members with exactly one team lead. A USN (or admission ID) can only be in one team, so no double-dipping.",
   },
   {
     title: "Pick your theme!",
@@ -105,7 +105,7 @@ export const PRIZE_TIERS = [
 export const FAQ = [
   {
     q: "Who can participate?",
-    a: "Students in semester 3 or 5. Every member needs a valid USN, and a USN can only be in one team.",
+    a: "Only students of Computer Science (Data Science) in semester 1, 3, 5 or 7. Every member needs a valid USN (semester 1 students use their admission ID instead), and each can only be in one team.",
   },
   {
     q: "What do we actually do?",
@@ -117,7 +117,7 @@ export const FAQ = [
   },
   {
     q: "How do themes and slots work?",
-    a: "There are 5 themes under the Hospital track: Cancer, Diabetes, Cardiac, Hospital Operations and Emergency / ICU. Each takes 5 teams, 25 in total, first come first served. Your slot is locked only when you submit.",
+    a: "There are 5 themes under the Hospital track: Cancer, Diabetes, Cardiac, Hospital Operations and Emergency / ICU. Each takes 5 teams, 25 in total, first come first served. Your slot is locked only when you submit your registration.",
   },
   {
     q: "What if my theme fills up while I'm registering?",

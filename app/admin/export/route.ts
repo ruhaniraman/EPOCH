@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 // One row per participant, with their team's details repeated, so it can be
 // sorted/filtered in Excel or Google Sheets.
-const HEADERS = ["Registration ID", "Team", "Theme", "Registered at (IST)", "Role", "Full name", "USN", "Phone", "Semester"];
+const HEADERS = ["Registration ID", "Team", "Theme", "Registered at (IST)", "Role", "Full name", "USN / Admission ID", "Phone", "Semester"];
 
 function cell(v: string | number): string {
   let s = String(v);

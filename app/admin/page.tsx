@@ -105,7 +105,7 @@ export default async function AdminPage() {
                       <thead>
                         <tr className="border-b border-line text-label uppercase tracking-label text-muted">
                           <th className="py-2 pr-4 font-bold">Name</th>
-                          <th className="py-2 pr-4 font-bold">USN</th>
+                          <th className="py-2 pr-4 font-bold">USN / Adm. ID</th>
                           <th className="py-2 pr-4 font-bold">Phone</th>
                           <th className="py-2 font-bold">Sem</th>
                         </tr>

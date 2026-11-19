@@ -1,7 +1,7 @@
 // Form rules shared by the register steps. The backend must enforce these too;
 // this is only so people see mistakes before they hit submit.
 
-import type { Semester } from "./types";
+import { SEMESTERS, type Semester } from "./types";
 
 /** Form state for one member (semester is "" until picked). */
 export interface MemberDraft {
@@ -21,6 +21,14 @@ export const normalizePhone = (v: string) => v.replace(/\D/g, "").slice(-10);
 
 // VTU-style USN: 1DS23CD045 → digit, 2 letters, 2 digits, 2 letters, 3 digits.
 const USN_RE = /^\d[A-Z]{2}\d{2}[A-Z]{2}\d{3}$/;
+// Semester 1 students don't have a USN yet; they enter their college admission ID
+// in the same field. Format isn't fixed, so allow 3–20 letters, digits, "/" or "-".
+const ADMISSION_ID_RE = /^[A-Z0-9][A-Z0-9/-]{2,19}$/;
+
+/** What the ID field is called for a given semester. */
+export const idLabel = (semester: Semester | "") => (semester === 1 ? "Admission ID" : "USN");
+
+export const isSemester = (v: unknown): v is Semester => SEMESTERS.includes(v as Semester);
 
 export function validateTeamName(v: string): string | undefined {
   const t = v.trim();
@@ -41,9 +49,14 @@ export function validateMemberField(
       return;
     case "usn": {
       const usn = normalizeUsn(m.usn);
-      if (!usn) return "USN is required.";
-      if (!USN_RE.test(usn)) return "Looks wrong. Format: 1DS23CD045";
-      if (otherUsns.includes(usn)) return "This USN is already in your team.";
+      const label = idLabel(m.semester);
+      if (!usn) return `${label} is required.`;
+      if (m.semester === 1) {
+        if (!ADMISSION_ID_RE.test(usn)) return "Enter your admission ID (letters and numbers only).";
+      } else if (!USN_RE.test(usn)) {
+        return m.semester ? "Looks wrong. Format: 1DS23CD045" : "Looks wrong. Format: 1DS23CD045 (Sem 1: pick Semester 1 first)";
+      }
+      if (otherUsns.includes(usn)) return `This ${label} is already in your team.`;
       return;
     }
     case "phone": {

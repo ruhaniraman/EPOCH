@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { ApiErrorCode, Member, Registration } from "@/lib/types";
 import {
+  isSemester,
   MAX_MEMBERS,
   MIN_MEMBERS,
   normalizePhone,
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
       fullName: typeof item.fullName === "string" ? item.fullName.trim() : "",
       usn: typeof item.usn === "string" ? normalizeUsn(item.usn) : "",
       phone: typeof item.phone === "string" ? normalizePhone(item.phone) : "",
-      semester: item.semester === 3 || item.semester === 5 ? item.semester : "",
+      semester: isSemester(item.semester) ? item.semester : "",
     };
     const earlierUsns = members.map((m) => m.usn);
     for (const field of ["fullName", "usn", "phone", "semester"] as const) {
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
       fullName: draft.fullName,
       usn: draft.usn,
       phone: draft.phone,
-      semester: draft.semester as 3 | 5,
+      semester: draft.semester as Member["semester"],
       isLead: item.isLead,
     });
   }

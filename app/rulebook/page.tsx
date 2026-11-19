@@ -13,8 +13,9 @@ const REGISTRATION_RULES = [
   `${EVENT.totalSlots} teams in total: ${EVENT.slotsPerTheme} per theme, first come first served.`,
   "A theme closes as soon as its 5th team submits.",
   "Teams have 3 or 4 members, with exactly one team lead.",
-  "Every member gives full name, USN, phone number and semester.",
-  "A USN can only be in one team.",
+  "Open to Computer Science (Data Science) students in semester 1, 3, 5 or 7.",
+  "Every member gives full name, USN, phone number and semester. Semester 1 students give their admission ID instead of a USN.",
+  "A USN or admission ID can only be in one team.",
   "Your theme slot is locked only when you submit, not when you pick it.",
 ];
 

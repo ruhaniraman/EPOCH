@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Button, Spinner } from "@/components/ui/Button";
 import { submitRegistration } from "@/lib/api";
-import type { Registration, TeamInput, ThemeId } from "@/lib/types";
+import type { Registration, Semester, TeamInput, ThemeId } from "@/lib/types";
 import { isFull, slotsOpen, useThemes } from "@/lib/useThemes";
 import {
   emptyMember,
@@ -161,7 +161,7 @@ export function RegisterFlow() {
         fullName: m.fullName.trim(),
         usn: normalizeUsn(m.usn),
         phone: normalizePhone(m.phone),
-        semester: m.semester as 3 | 5,
+        semester: m.semester as Semester,
         isLead: i === 0,
       })),
     };
