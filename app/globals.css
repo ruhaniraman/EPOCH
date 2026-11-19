@@ -68,6 +68,48 @@ html.block-cursor * {
   animation: blink 1s steps(1) infinite;
 }
 
+/* ---- Sticky note (hero) ---------------------------------------------- */
+/* Wrapper carries the motion + shadow; the paper is clipped for the folded
+   corner (a box-shadow would be clipped too, so the shadow is a drop-shadow). */
+.sticky-note {
+  --tilt: 3deg;
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.55));
+  animation:
+    note-in 0.9s var(--ease-out-expo) 0.5s both,
+    note-sway 5s ease-in-out 1.4s infinite;
+}
+.sticky-note__paper {
+  background: var(--color-gold);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.75rem), calc(100% - 1.75rem) 100%, 0 100%);
+}
+.sticky-note__fold {
+  background: linear-gradient(135deg, #c99a12 50%, transparent 50%);
+}
+@keyframes note-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-48px) rotate(-14deg) scale(1.2);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(4px) rotate(calc(var(--tilt) + 2deg)) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--tilt)) scale(1);
+  }
+}
+@keyframes note-sway {
+  0%,
+  100% {
+    transform: rotate(var(--tilt));
+  }
+  50% {
+    transform: rotate(calc(var(--tilt) - 2.5deg));
+  }
+}
+
 /* ---- Reduced motion -------------------------------------------------- */
 /* Components with JS-driven motion (ASCII scramble, typewriter) also check
    matchMedia themselves; this rule covers every CSS transition/animation. */

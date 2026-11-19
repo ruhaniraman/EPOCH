@@ -27,6 +27,13 @@ export const EVENT = {
     "One day. One messy hospital dataset. Clean it, train a model on it, and pitch what you found in three minutes flat.",
 } as const;
 
+// The sticky note in the hero (components/landing/StickyNote.tsx).
+export const ELIGIBILITY_NOTE = {
+  title: "Heads up!",
+  body: "This datathon is only for students of the Department of Computer Science (Data Science).",
+  footer: "Sem 1 · 3 · 5 · 7",
+} as const;
+
 export const CONTACTS = [
   { name: "Manosh S", role: "Event Coordinator", phone: "8050581457" },
   { name: "Dr. Aarathi S", role: "Faculty Coordinator" },

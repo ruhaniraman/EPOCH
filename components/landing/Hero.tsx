@@ -4,6 +4,7 @@ import { Logo } from "@/components/brand/Logo";
 import { LinkButton } from "@/components/ui/Button";
 import { CornerTicks } from "@/components/ui/Frame";
 import { Label } from "@/components/ui/Section";
+import { StickyNote } from "./StickyNote";
 import { EVENT } from "@/lib/content";
 import { slotsOpen, useThemes } from "@/lib/useThemes";
 
@@ -36,6 +37,9 @@ export function Hero() {
       <p className="mt-4 text-label font-bold uppercase tracking-label text-muted">
         {EVENT.department} · {EVENT.college}
       </p>
+
+      {/* Eligibility note: pinned top-right on lg+ screens, inline below the intro otherwise. */}
+      <StickyNote className="mt-12 ml-2 w-fit lg:absolute lg:right-gutter-lg lg:top-44 lg:mt-0 lg:ml-0 2xl:right-[8%]" />
 
       {/* Date / time / venue strip */}
       <dl className="relative mt-12 grid border border-line sm:grid-cols-3">
