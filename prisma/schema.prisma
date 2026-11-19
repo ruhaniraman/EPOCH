@@ -1,0 +1,45 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Theme {
+  id            String         @id
+  code          String         @unique
+  name          String
+  blurb         String
+  capacity      Int            @default(5)
+  registrations Registration[]
+  createdAt     DateTime       @default(now())
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  teamName  String
+  themeId   String
+  createdAt DateTime @default(now())
+
+  theme   Theme    @relation(fields: [themeId], references: [id])
+  members Member[]
+
+  @@index([themeId])
+}
+
+model Member {
+  id             String       @id @default(cuid())
+  fullName       String
+  usn            String       @unique
+  phone          String
+  semester       Int
+  isLead         Boolean      @default(false)
+  registrationId String
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@index([registrationId])
+}
