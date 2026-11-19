@@ -1,0 +1,80 @@
+/* ==========================================================================
+   EPOCH 1.0 — THEME
+   The ONE place for colours, fonts, spacing, sizes and motion.
+   Components never contain raw hex values; they use the Tailwind classes
+   these tokens generate (bg-gold, text-muted, border-line, font-display …)
+   or var(--…) directly in CSS.
+
+   Contrast (WCAG, measured against --color-bg #0B0B0B):
+     ink    #F5F3EE  17.8 : 1
+     muted  #8F8F8F   6.1 : 1   (≥ 4.5 required for body text)
+     gold   #F2C230  11.8 : 1   (bg on gold is also 11.8 : 1)
+     danger #FF6B5B   7.0 : 1
+     taken  #666666   ~3.3 : 1  (non-text UI; ≥ 3 required)
+   ========================================================================== */
+
+@theme {
+  /* ---- Colour -------------------------------------------------------- */
+  /* Brand gold. Poster pixels sample ~#FCDE54; brief says #F2C230.
+     When the logo SVG lands, set this to the logo's gold. */
+  --color-gold: #F2C230;
+  --color-gold-dim: #F2C2301F; /* 12% gold: hover fills, subtle highlights */
+  --color-on-gold: #0B0B0B; /* text placed on a gold block */
+
+  --color-bg: #0B0B0B; /* page */
+  --color-surface: #141414; /* cards, inputs */
+  --color-surface-raised: #1B1B1B; /* hovered card, open accordion row */
+
+  --color-ink: #F5F3EE; /* primary text (warm white, as in the video) */
+  --color-muted: #8F8F8F; /* secondary text */
+  --color-line: #262626; /* 1px borders, rails, dividers */
+  --color-line-strong: #3D3D3D; /* input borders, hovered borders */
+  --color-tick: #F5F3EE; /* square corner ticks on frames */
+  --color-taken: #666666; /* filled slot square */
+  --color-danger: #FF6B5B; /* inline validation errors */
+
+  --color-dot: #F2C2301A; /* dot-grid dots (10% gold) */
+
+  /* ---- Type ---------------------------------------------------------- */
+  /* Font files are loaded in app/layout.tsx via next/font, which exposes
+     --font-bebas / --font-jetbrains / --font-space. */
+  --font-display: var(--font-bebas), "Bebas Neue", Impact, sans-serif; /* big headlines */
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace; /* everything else */
+  --font-lockup: var(--font-space), "Space Mono", ui-monospace, monospace; /* logo lockup only */
+
+  --text-hero: clamp(5rem, 22vw, 13rem); /* "EPOCH" in the hero lockup */
+  --text-hero--line-height: 0.85;
+  --text-section: clamp(3.25rem, 11vw, 7.5rem); /* section headlines */
+  --text-section--line-height: 0.9;
+  --text-title: clamp(2rem, 6vw, 2.75rem); /* card titles */
+  --text-title--line-height: 1;
+  --text-label: 0.6875rem; /* 11px: [01], tags, column labels */
+  --text-label--line-height: 1.4;
+
+  --tracking-label: 0.18em; /* small uppercase labels */
+  --tracking-lockup: 0.55em; /* DATATHON / 1.0 under the wordmark */
+
+  /* ---- Spacing & layout --------------------------------------------- */
+  --spacing-gutter: 1rem; /* 16px side gutter on phones */
+  --spacing-gutter-lg: 2.5rem; /* side gutter on desktop */
+  --spacing-section: clamp(5rem, 12vw, 9rem); /* vertical gap between sections */
+  --spacing-tap: 2.75rem; /* 44px minimum tap target */
+  --spacing-tick: 5px; /* size of a corner tick */
+
+  --container-page: 80rem; /* landing content max width (1280px) */
+  --container-form: 36rem; /* /register single column (576px) */
+
+  --radius-none: 0; /* brutalist: everything is square */
+
+  /* ---- Motion -------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+}
+
+/* Dot-grid geometry: plain variables (not Tailwind tokens). */
+:root {
+  --grid-size: 24px;
+  --grid-dot-size: 1px;
+}

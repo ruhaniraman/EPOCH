@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "./theme.css";
+
+/* ---- Base ------------------------------------------------------------ */
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-bg);
+    /* faint gold dot grid, fixed so it doesn't "swim" while scrolling */
+    background-image: radial-gradient(
+      circle at center,
+      var(--color-dot) var(--grid-dot-size),
+      transparent calc(var(--grid-dot-size) + 0.5px)
+    );
+    background-size: var(--grid-size) var(--grid-size);
+    background-attachment: fixed;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    font-variant-ligatures: none;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-on-gold);
+  }
+
+  /* One visible, consistent keyboard focus style everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+}
+
+/* Thin gold scrollbar, like the video's accent scroll marker on the right edge. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gold) transparent;
+  scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+}
+
+@keyframes blink {
+  50% {
+    visibility: hidden;
+  }
+}
+
+/* Gold block cursor replaces the system cursor (see BlockCursor.tsx).
+   Only applied when JS confirms a mouse and no reduced-motion preference. */
+html.block-cursor,
+html.block-cursor * {
+  cursor: none !important;
+}
+.cursor-block.is-idle {
+  animation: blink 1s steps(1) infinite;
+}
+
+/* ---- Reduced motion -------------------------------------------------- */
+/* Components with JS-driven motion (ASCII scramble, typewriter) also check
+   matchMedia themselves; this rule covers every CSS transition/animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
