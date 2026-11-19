@@ -7,6 +7,7 @@ Website for **EPOCH 1.0**, a one-day hospital-data datathon by The ACE Society, 
 > **What's left:** Frontend-backend integration, final content, complete rulebook, end-to-end testing and deployment.
 ---
 
+
 ## Getting started
 
 Needs Node.js 20+.
@@ -21,7 +22,6 @@ npm run build      # production build
 Stack: **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, TypeScript.
 
 > Next.js 16 has breaking changes from older versions. Before changing framework-level code, check the docs bundled in `node_modules/next/dist/docs/` (see `AGENTS.md`).
-
 ---
 
 ## What's already built
@@ -41,29 +41,26 @@ Stack: **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, TypeScript
 - Live validation for names, USN (`1DS23CD045` format), 10-digit Indian mobile, semester (3 or 5), and duplicate USNs within a team.
 - Theme slots refresh every 20s and on tab focus.
 - Handles every server error: theme filled while you were registering (keeps your data and lets you pick another theme), USN already in another team, registrations closed, network failure.
-- - On success, displays the registration ID returned by the backend.
+- On success, displays the registration ID returned by the backend.
 - Formatted IDs such as `EPOCH-DIA-07` need to be aligned between frontend and backend during integration.
 
 ### Project layout
 
 ```
-app/            pages, layout, global styles (theme.css = design tokens)
+app/            pages, layout, global styles
 components/
   landing/      landing page sections
   register/     registration flow steps & result screens
-  ui/           shared Button, Frame, Section, SlotSquares
+  ui/           shared UI components
   brand/        logo + mark
   ascii/        ASCII-art word renderer
 lib/
-  content.ts    ALL event copy (dates, themes, prizes, FAQ, contacts)
-  types.ts      the frontend ⇄ backend contract
-  api.ts        frontend API communication layer(needs real API integration)  
-  
-mock-db.ts    fake backend in localStorage (used for frontend-only testing)
-  
-validation.ts form rules
-  
-useThemes.ts  live theme/slot data hook
+  content.ts    event copy
+  types.ts      frontend-backend contract
+  api.ts        frontend API communication layer
+  mock-db.ts    fake backend in localStorage
+  validation.ts form rules
+  useThemes.ts  live theme/slot data hook
 public/         logo SVGs
 ```
 
@@ -146,8 +143,9 @@ Everything the site says lives in **`lib/content.ts`**. Lines marked `// EDIT:` 
 ---
 
 ## Testing with the fake backend
-> The fake backend is retained for frontend-only testing. It must be replaced with real API calls during integration.
-Until the real backend exists, `lib/mock-db.ts` fakes it in `localStorage`. Add these to any URL:
+> The fake backend is retained for frontend-only testing. It should be replaced with real API calls during frontend-backend integration.
+
+`lib/mock-db.ts` simulates backend behavior using `localStorage`. Add these to any URL:
 
 | Switch          | Effect |
 |-----------------|--------|
