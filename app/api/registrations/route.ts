@@ -1,211 +1,162 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Prisma, PrismaClient } from "@prisma/client";
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import type { ApiErrorCode, Member, Registration } from "@/lib/types";
+import {
+  MAX_MEMBERS,
+  MIN_MEMBERS,
+  normalizePhone,
+  normalizeUsn,
+  validateMemberField,
+  validateTeamName,
+  type MemberDraft,
+} from "@/lib/validation";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function errorResponse(code: string, message: string, status: number, usns?: string[]) {
-  return NextResponse.json(
-    { code, message, ...(usns ? { usns } : {}) },
-    { status }
-  );
+function errorResponse(code: ApiErrorCode | "INTERNAL_ERROR", message: string, status: number, usns?: string[]) {
+  return NextResponse.json({ code, message, ...(usns ? { usns } : {}) }, { status });
+}
+
+/** Thrown inside the transaction to roll it back and return an ApiError. */
+class RegistrationError extends Error {
+  constructor(
+    public code: ApiErrorCode,
+    message: string,
+    public status: number,
+    public usns?: string[],
+  ) {
+    super(message);
+  }
 }
 
 export async function POST(request: NextRequest) {
+  let body: unknown;
   try {
-    const body: unknown = await request.json();
+    body = await request.json();
+  } catch {
+    return errorResponse("VALIDATION", "Invalid request body.", 400);
+  }
 
-    if (!isRecord(body)) {
-      return errorResponse("VALIDATION", "Invalid request body.", 400);
+  // ---- validate (same rules as the form, see lib/validation.ts) -------------
+  if (!isRecord(body)) return errorResponse("VALIDATION", "Invalid request body.", 400);
+
+  const teamName = typeof body.teamName === "string" ? body.teamName.trim() : "";
+  const themeId = typeof body.themeId === "string" ? body.themeId.trim() : "";
+
+  const teamNameError = validateTeamName(teamName);
+  if (teamNameError) return errorResponse("VALIDATION", `Team name: ${teamNameError}`, 400);
+  if (!themeId) return errorResponse("VALIDATION", "Pick a theme.", 400);
+
+  if (!Array.isArray(body.members) || body.members.length < MIN_MEMBERS || body.members.length > MAX_MEMBERS) {
+    return errorResponse("VALIDATION", `A team must have ${MIN_MEMBERS} or ${MAX_MEMBERS} members.`, 400);
+  }
+
+  const members: Member[] = [];
+  for (const [i, item] of body.members.entries()) {
+    if (!isRecord(item) || typeof item.isLead !== "boolean") {
+      return errorResponse("VALIDATION", `Member ${i + 1}: invalid details.`, 400);
     }
-
-    const teamName =
-      typeof body.teamName === "string" ? body.teamName.trim() : "";
-
-    const themeId =
-      typeof body.themeId === "string" ? body.themeId.trim() : "";
-
-    if (!teamName || !themeId || !Array.isArray(body.members)) {
-      return errorResponse(
-        "VALIDATION",
-        "Team name, theme and members are required.",
-        400
-      );
+    const draft: MemberDraft = {
+      fullName: typeof item.fullName === "string" ? item.fullName.trim() : "",
+      usn: typeof item.usn === "string" ? normalizeUsn(item.usn) : "",
+      phone: typeof item.phone === "string" ? normalizePhone(item.phone) : "",
+      semester: item.semester === 3 || item.semester === 5 ? item.semester : "",
+    };
+    const earlierUsns = members.map((m) => m.usn);
+    for (const field of ["fullName", "usn", "phone", "semester"] as const) {
+      const err = validateMemberField(field, draft, earlierUsns);
+      if (err) return errorResponse("VALIDATION", `Member ${i + 1}: ${err}`, 400);
     }
+    members.push({
+      fullName: draft.fullName,
+      usn: draft.usn,
+      phone: draft.phone,
+      semester: draft.semester as 3 | 5,
+      isLead: item.isLead,
+    });
+  }
 
-    if (body.members.length < 3 || body.members.length > 4) {
-      return errorResponse(
-        "VALIDATION",
-        "A team must have 3 or 4 members.",
-        400
-      );
-    }
+  if (members.filter((m) => m.isLead).length !== 1) {
+    return errorResponse("VALIDATION", "A team must have exactly one team lead.", 400);
+  }
 
-    const members: {
-  fullName: string;
-  usn: string;
-  phone: string;
-  semester: number;
-  isLead: boolean;
-}[] = [];
+  // ---- lock a slot ---------------------------------------------------------
+  try {
+    const registration = await prisma.$transaction(async (tx): Promise<Registration> => {
+      // Lock every theme row so concurrent submits run one at a time. That keeps
+      // the per-theme capacity, the 25-team cap and the running ID number exact.
+      // (At most 25 registrations ever, so serialising them costs nothing.)
+      await tx.$queryRaw`SELECT id FROM "Theme" ORDER BY id FOR UPDATE`;
 
-    for (const item of body.members) {
-      if (!isRecord(item)) {
-        return errorResponse("VALIDATION", "Invalid member details.", 400);
+      const themes = await tx.theme.findMany({ include: { _count: { select: { registrations: true } } } });
+      const totalTaken = themes.reduce((n, t) => n + t._count.registrations, 0);
+      const totalCapacity = themes.reduce((n, t) => n + t.capacity, 0);
+
+      if (totalTaken >= totalCapacity) {
+        throw new RegistrationError("REGISTRATIONS_CLOSED", "All slots are taken.", 409);
       }
 
-      const fullName =
-        typeof item.fullName === "string" ? item.fullName.trim() : "";
+      const theme = themes.find((t) => t.id === themeId);
+      if (!theme) throw new RegistrationError("VALIDATION", "Invalid theme selected.", 400);
+      if (theme._count.registrations >= theme.capacity) {
+        throw new RegistrationError("THEME_FULL", `${theme.name} just filled up.`, 409);
+      }
 
-      const usn =
-        typeof item.usn === "string" ? item.usn.trim().toUpperCase() : "";
-
-      const phone =
-        typeof item.phone === "string" ? item.phone.trim() : "";
-
-      const semester = item.semester;
-      const isLead = item.isLead;
-
-      if (
-        !fullName ||
-        !usn ||
-        !phone ||
-        (semester !== 3 && semester !== 5) ||
-        typeof isLead !== "boolean"
-      ) {
-        return errorResponse(
-          "VALIDATION",
-          "Check member names, USNs, phone numbers and semesters.",
-          400
+      const clashes = await tx.member.findMany({
+        where: { usn: { in: members.map((m) => m.usn) } },
+        select: { usn: true },
+      });
+      if (clashes.length) {
+        throw new RegistrationError(
+          "DUPLICATE_USN",
+          "Already registered in another team.",
+          409,
+          clashes.map((c) => c.usn),
         );
       }
 
-      members.push({ fullName, usn, phone, semester, isLead });
-    }
-
-    const leaders = members.filter((member) => member.isLead);
-
-    if (leaders.length !== 1) {
-      return errorResponse(
-        "VALIDATION",
-        "A team must have exactly one team leader.",
-        400
-      );
-    }
-
-    const usns = members.map((member) => member.usn);
-    const uniqueUsns = new Set(usns);
-
-    if (uniqueUsns.size !== usns.length) {
-      const duplicates = usns.filter(
-        (usn, index) => usns.indexOf(usn) !== index
-      );
-
-      return errorResponse(
-        "DUPLICATE_USN",
-        "A USN cannot appear more than once in a team.",
-        409,
-        [...new Set(duplicates)]
-      );
-    }
-
-    const registration = await prisma.$transaction(async (tx) => {
-      // Lock this theme row so simultaneous registrations cannot exceed capacity.
-      await tx.$queryRaw`
-        SELECT id FROM "Theme" WHERE id = ${themeId} FOR UPDATE
-      `;
-
-      const theme = await tx.theme.findUnique({
-        where: { id: themeId },
-      });
-
-      if (!theme) {
-        throw new Error("INVALID_THEME");
-      }
-
-      const taken = await tx.registration.count({
-        where: { themeId },
-      });
-
-      if (taken >= theme.capacity) {
-        throw new Error("THEME_FULL");
-      }
+      // e.g. EPOCH-DIA-07 — the running number across all teams. Taken from the
+      // highest existing number (not the count) so deleting a team in /admin
+      // can never cause the next team to reuse an ID.
+      const existing = await tx.registration.findMany({ select: { id: true } });
+      const highest = existing.reduce((max, r) => Math.max(max, Number(r.id.split("-").pop()) || 0), 0);
+      const id = `EPOCH-${theme.code}-${String(highest + 1).padStart(2, "0")}`;
 
       const created = await tx.registration.create({
-        data: {
-          teamName,
-          themeId,
-          members: {
-            create: members,
-          },
-        },
+        data: { id, teamName, themeId, members: { create: members } },
         include: {
-          theme: true,
-          members: {
-            select: {
-              fullName: true,
-              usn: true,
-              phone: true,
-              semester: true,
-              isLead: true,
-            },
-          },
+          members: { select: { fullName: true, usn: true, phone: true, semester: true, isLead: true } },
         },
       });
 
       return {
         id: created.id,
         teamName: created.teamName,
-        themeId: created.themeId,
-        themeName: created.theme.name,
-        members: created.members,
+        themeId: theme.id as Registration["themeId"],
+        themeName: theme.name,
+        members: created.members as Member[],
         createdAt: created.createdAt.toISOString(),
       };
+    }, {
+      // Time spent queueing on the lock above counts toward the timeout. Prisma's
+      // 5s default would turn a rush of submits at opening time into 500s.
+      maxWait: 10_000,
+      timeout: 20_000,
     });
 
     return NextResponse.json(registration, { status: 201 });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return errorResponse(
-          "DUPLICATE_USN",
-          "One or more USNs are already registered.",
-          409
-        );
-      }
+    if (error instanceof RegistrationError) {
+      return errorResponse(error.code, error.message, error.status, error.usns);
     }
-
-    if (error instanceof Error) {
-      if (error.message === "THEME_FULL") {
-        return errorResponse(
-          "THEME_FULL",
-          "This theme has reached its registration capacity.",
-          409
-        );
-      }
-
-      if (error.message === "INVALID_THEME") {
-        return errorResponse("VALIDATION", "Invalid theme selected.", 400);
-      }
+    // Safety net: the unique index on Member.usn caught a clash the check missed.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return errorResponse("DUPLICATE_USN", "One or more USNs are already registered.", 409);
     }
-
     console.error("POST /api/registrations failed:", error);
-
-    return errorResponse(
-      "INTERNAL_ERROR",
-      "Unable to complete registration.",
-      500
-    );
+    return errorResponse("INTERNAL_ERROR", "Unable to complete registration.", 500);
   }
 }
