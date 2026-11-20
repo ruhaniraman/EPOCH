@@ -5,7 +5,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Frame } from "@/components/ui/Frame";
 import { EVENT } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Rulebook — EPOCH 1.0" };
+export const metadata: Metadata = { title: "Rulebook — EPOCH" };
 
 // EDIT: the full rulebook isn't written yet. The registration rules below are
 // confirmed; replace the "Coming soon" block with the remaining sections.

@@ -10,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { logout } from "./actions";
 import { DeleteButton } from "./DeleteButton";
 
-export const metadata: Metadata = { title: "Admin — EPOCH 1.0", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Admin — EPOCH", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 const when = (d: Date) =>

@@ -6,7 +6,7 @@
 import type { Theme } from "./types";
 
 export const EVENT = {
-  name: "EPOCH 1.0",
+  name: "EPOCH",
   kind: "Datathon",
   tagline: "Clean it. Train it. Pitch it.",
   society: "The ACE Society",

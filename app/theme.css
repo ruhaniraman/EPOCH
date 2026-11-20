@@ -1,5 +1,5 @@
 /* ==========================================================================
-   EPOCH 1.0 — THEME
+   EPOCH — THEME
    The ONE place for colours, fonts, spacing, sizes and motion.
    Components never contain raw hex values; they use the Tailwind classes
    these tokens generate (bg-gold, text-muted, border-line, font-display …)
@@ -52,7 +52,7 @@
   --text-label--line-height: 1.4;
 
   --tracking-label: 0.18em; /* small uppercase labels */
-  --tracking-lockup: 0.55em; /* DATATHON / 1.0 under the wordmark */
+  --tracking-lockup: 0.55em; /* DATATHON under the wordmark */
 
   /* ---- Spacing & layout --------------------------------------------- */
   --spacing-gutter: 1rem; /* 16px side gutter on phones */

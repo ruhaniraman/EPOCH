@@ -1,6 +1,6 @@
-# EPOCH 1.0 — Datathon Website
+# EPOCH — Datathon Website
 
-Website for **EPOCH 1.0**, a one-day hospital-data datathon by The ACE Society, Dept. of CSE (Data Science), DSCE.
+Website for **EPOCH**, a one-day hospital-data datathon by The ACE Society, Dept. of CSE (Data Science), DSCE.
 24 Nov 2026 · 9 AM – 5 PM · Building No. 4, NEB.
 
 > **Status:** Frontend, backend APIs, PostgreSQL database and organiser dashboard (`/admin`) are built, connected and tested end to end.

@@ -5,7 +5,7 @@ import { Frame } from "@/components/ui/Frame";
 import { adminConfigured, isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "./LoginForm";
 
-export const metadata: Metadata = { title: "Admin login — EPOCH 1.0", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Admin login — EPOCH", robots: { index: false, follow: false } };
 // Must read ADMIN_PASSWORD and the cookie per request, not once at build time.
 export const dynamic = "force-dynamic";
 

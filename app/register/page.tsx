@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { RegisterFlow } from "@/components/register/RegisterFlow";
 
-export const metadata: Metadata = { title: "Register — EPOCH 1.0" };
+export const metadata: Metadata = { title: "Register — EPOCH" };
 
 export default function RegisterPage() {
   return (

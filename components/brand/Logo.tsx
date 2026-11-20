@@ -16,19 +16,18 @@ const SIZES: Record<Size, { word: string; sub: string; gap: string; mark: string
 
 /**
  * Logo lockup: hourglass mark on the left (drawn inline, see Mark.tsx), "EPOCH"
- * in Bebas Neue, and "DATATHON" / "1.0" in gold Space Mono spread across the
+ * in Bebas Neue, and "DATATHON" in gold Space Mono spread across the
  * word's width underneath.
  */
 export function Logo({ size = "sm", onGold = false, className = "" }: { size?: Size; onGold?: boolean; className?: string }) {
   const s = SIZES[size];
   return (
-    <span className={`inline-flex items-center ${s.gap} ${className}`} aria-label="EPOCH Datathon 1.0" role="img">
+    <span className={`inline-flex items-center ${s.gap} ${className}`} aria-label="EPOCH Datathon" role="img">
       <Mark onGold={onGold} className={`${s.mark} h-auto shrink-0`} />
       <span aria-hidden className="inline-flex flex-col">
         <span className={`font-display ${onGold ? "text-on-gold" : "text-ink"} ${s.word}`}>EPOCH</span>
         <span className={`flex justify-between font-lockup uppercase leading-none ${onGold ? "text-on-gold" : "text-gold"} ${s.sub}`}>
           <span className={s.track}>Datathon</span>
-          <span>1.0</span>
         </span>
       </span>
     </span>

@@ -10,9 +10,9 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 const space = Space_Mono({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-space", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "EPOCH 1.0 — Datathon",
+  title: "EPOCH — Datathon",
   description:
-    "EPOCH 1.0 Datathon by The ACE Society, Dept. of CSE (Data Science), DSCE. 24 Nov 2026. Clean it. Train it. Pitch it.",
+    "EPOCH Datathon by The ACE Society, Dept. of CSE (Data Science), DSCE. 24 Nov 2026. Clean it. Train it. Pitch it.",
 };
 
 export const viewport: Viewport = {

@@ -11,7 +11,7 @@ export interface Theme {
   code: string;
   name: string;
   blurb: string;
-  /** always 5 for EPOCH 1.0 */
+  /** always 5 for EPOCH */
   capacity: number;
   /** teams that have SUBMITTED for this theme (slots are only locked on submit) */
   taken: number;
