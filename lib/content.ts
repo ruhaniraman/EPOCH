@@ -5,6 +5,8 @@
 
 import type { Theme } from "./types";
 
+export const RULEBOOK_URL = "https://drive.google.com/file/d/1705BGEQACEM3ppTnldW5D-cO0VtGWYR5/view?usp=sharing";
+
 export const EVENT = {
   name: "EPOCH",
   kind: "Datathon",
@@ -88,7 +90,7 @@ export const RULE_CARDS = [
   {
     title: "Pick your theme!",
     body: "Your slot is only locked when you hit submit, not when you pick it. Read the",
-    link: { label: "rulebook before you register.", href: "/rulebook" },
+    link: { label: "rulebook before you register.", href: RULEBOOK_URL },
   },
 ] as const;
 

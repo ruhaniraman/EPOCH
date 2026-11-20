@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Button, Spinner } from "@/components/ui/Button";
 import { submitRegistration } from "@/lib/api";
+import { RULEBOOK_URL } from "@/lib/content";
 import type { Registration, Semester, TeamInput, ThemeId } from "@/lib/types";
 import { isFull, slotsOpen, useThemes } from "@/lib/useThemes";
 import {
@@ -306,7 +307,7 @@ export function RegisterFlow() {
               />
               <span className="text-sm leading-relaxed">
                 I&apos;ve read the{" "}
-                <a href="/rulebook" target="_blank" className="font-bold underline decoration-gold decoration-2 underline-offset-4">
+                <a href={RULEBOOK_URL} target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-gold decoration-2 underline-offset-4">
                   rulebook
                 </a>{" "}
                 and my team agrees to follow it.

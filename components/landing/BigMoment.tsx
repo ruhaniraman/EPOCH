@@ -32,7 +32,7 @@ export function BigMoment() {
                 {"link" in c && (
                   <>
                     {" "}
-                    <a href={c.link.href} className="font-bold text-ink underline decoration-gold decoration-2 underline-offset-4 hover:text-gold">
+                    <a href={c.link.href} target="_blank" rel="noopener noreferrer" className="font-bold text-ink underline decoration-gold decoration-2 underline-offset-4 hover:text-gold">
                       {c.link.label}
                     </a>
                   </>

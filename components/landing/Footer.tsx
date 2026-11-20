@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AsciiWord } from "@/components/ascii/AsciiWord";
 import { Logo } from "@/components/brand/Logo";
 import { Label } from "@/components/ui/Section";
-import { CONTACTS, EVENT, NAV } from "@/lib/content";
+import { CONTACTS, EVENT, NAV, RULEBOOK_URL } from "@/lib/content";
 
 const WORD = ["EPOCH DATATHON"];
 const WORD_MOBILE = ["EPOCH", "DATATHON"];
@@ -35,9 +35,9 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/rulebook" className={link}>
+              <a href={RULEBOOK_URL} target="_blank" rel="noopener noreferrer" className={link}>
                 Rulebook <span aria-hidden>↗</span>
-              </Link>
+              </a>
             </li>
           </ul>
         </nav>

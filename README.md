@@ -4,7 +4,7 @@ Website for **EPOCH**, a one-day hospital-data datathon by The ACE Society, Dept
 24 Nov 2026 · 9 AM – 5 PM · Building No. 4, NEB.
 
 > **Status:** Frontend, backend APIs, PostgreSQL database and organiser dashboard (`/admin`) are built, connected and tested end to end.
-> **What's left:** deployment (see [Deploying](#deploying)), final content, complete rulebook, mobile testing.
+> **What's left:** deployment (see [Deploying](#deploying)), final content, mobile testing.
 
 ---
 
@@ -33,7 +33,7 @@ Stack: **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, TypeScript
 |--------------|------------------------------|------------|
 | `/`          | `app/page.tsx`               | Landing page: hero, Clean / Train / Pitch pillars, ASCII "big moment", themes with live slot counts, prizes, FAQ |
 | `/register`  | `app/register/page.tsx`      | 3-step registration: **1** pick a theme → **2** team details (3–4 members, one lead) → **3** review & submit |
-| `/rulebook`  | `app/rulebook/page.tsx`      | Registration rules (confirmed); rest of the rulebook is a "Coming soon" placeholder |
+| `/rulebook`  | `next.config.ts` (redirect)  | Redirects to the rulebook PDF on Google Drive (`RULEBOOK_URL` in `lib/content.ts`) |
 | `/admin`     | `app/admin/page.tsx`         | Organisers only (password = `ADMIN_PASSWORD` env var): slot counts per theme, every team with members and phone numbers, **Download CSV**, delete a team (frees its slot and USNs) |
 
 ### Registration flow
@@ -126,7 +126,7 @@ Everything the site says lives in **`lib/content.ts`**. Lines marked `// EDIT:` 
 
 ### 3. Rulebook
 
-`app/rulebook/page.tsx` has the confirmed registration rules. Replace the "Coming soon" block with the remaining sections (judging criteria, allowed tools, dataset rules, pitch format, disqualification, etc.).
+The rulebook is a Google Drive file. To change it, update `RULEBOOK_URL` in `lib/content.ts` and the `/rulebook` redirect in `next.config.ts`.
 
 ### 4. Before launch
 

@@ -5,7 +5,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { CornerTicks } from "@/components/ui/Frame";
 import { Label } from "@/components/ui/Section";
 import { StickyNote } from "./StickyNote";
-import { EVENT } from "@/lib/content";
+import { EVENT, RULEBOOK_URL } from "@/lib/content";
 import { slotsOpen, useThemes } from "@/lib/useThemes";
 
 export function Hero() {
@@ -71,7 +71,7 @@ export function Hero() {
           <LinkButton href="/register" arrow>
             {closed ? "Registrations closed" : "Register now"}
           </LinkButton>
-          <LinkButton href="/rulebook" variant="outline">
+          <LinkButton href={RULEBOOK_URL} variant="outline" external>
             Rulebook
           </LinkButton>
         </div>

@@ -18,17 +18,24 @@ export function LinkButton({
   href,
   variant = "gold",
   arrow = false,
+  external = false,
   className = "",
   children,
 }: {
   href: string;
   variant?: Variant;
   arrow?: boolean;
+  /** Opens in a new tab (for off-site links like the rulebook). */
+  external?: boolean;
   className?: string;
   children: ReactNode;
 }) {
   return (
-    <Link href={href} className={buttonClass(variant, className)}>
+    <Link
+      href={href}
+      className={buttonClass(variant, className)}
+      {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+    >
       {children}
       {arrow && <span aria-hidden>↗</span>}
     </Link>
