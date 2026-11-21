@@ -40,7 +40,7 @@ Stack: **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, TypeScript
 
 - Step is kept in the URL (`/register?step=2`), so back/forward works.
 - The draft survives reloads; you can't skip ahead to a step without finishing the earlier ones.
-- Live validation for names, USN (`1DS23CD045` format; semester 1 students enter their admission ID instead), 10-digit Indian mobile, semester (1, 3, 5 or 7), and duplicate USNs within a team.
+- Live validation for names, USN (`1DS23CD045` format; semester 1 students enter their admission ID instead; semester 3 students may also use a UGDS ID), 10-digit Indian mobile, semester (1, 3, 5 or 7), and duplicate USNs within a team.
 - Theme slots refresh every 20s and on tab focus.
 - Handles every server error: theme filled while you were registering (keeps your data and lets you pick another theme), USN already in another team, registrations closed, network failure.
 - On success, shows the registration ID from the backend, e.g. `EPOCH-DIA-07` (theme code + running number of the team overall, 01–25).

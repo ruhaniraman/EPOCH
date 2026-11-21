@@ -94,7 +94,13 @@ export function TeamStep({
               <TextField
                 id={`${pre}-usn`}
                 label={idLabel(m.semester)}
-                hint={m.semester === 1 ? "Sem 1 students: use your college admission ID." : undefined}
+                hint={
+                  m.semester === 1
+                    ? "Sem 1 students: use your college admission ID."
+                    : m.semester === 3
+                      ? "Sem 3 students: VTU USN or UGDS ID."
+                      : undefined
+                }
                 value={m.usn}
                 onChange={(ev) => onMember(i, "usn", ev.target.value.toUpperCase())}
                 onBlur={() => onBlur(`${pre}-usn`)}
@@ -103,7 +109,7 @@ export function TeamStep({
                 autoCapitalize="characters"
                 spellCheck={false}
                 placeholder={m.semester === 1 ? "Admission ID" : "1DS23CD045"}
-                maxLength={m.semester === 1 ? 20 : 12}
+                maxLength={m.semester === 1 ? 20 : m.semester === 3 ? 16 : 12}
               />
               <TextField
                 id={`${pre}-phone`}
