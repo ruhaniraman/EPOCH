@@ -98,7 +98,7 @@ export function TeamStep({
                   m.semester === 1
                     ? "Sem 1 students: use your college admission ID."
                     : m.semester === 3
-                      ? "Sem 3 students: VTU USN or UGDS ID."
+                      ? "Sem 3 students: VTU USN or UGDS ID (26UGDS1234)."
                       : undefined
                 }
                 value={m.usn}
@@ -109,7 +109,7 @@ export function TeamStep({
                 autoCapitalize="characters"
                 spellCheck={false}
                 placeholder={m.semester === 1 ? "Admission ID" : "1DS23CD045"}
-                maxLength={m.semester === 1 ? 20 : m.semester === 3 ? 16 : 12}
+                maxLength={m.semester === 1 ? 20 : 12}
               />
               <TextField
                 id={`${pre}-phone`}
