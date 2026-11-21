@@ -96,9 +96,9 @@ export function TeamStep({
                 label={idLabel(m.semester)}
                 hint={
                   m.semester === 1
-                    ? "Sem 1 students: use your college admission ID."
+                    ? "Sem 1 students: use your admission ID (26UGDS1234)."
                     : m.semester === 3
-                      ? "Sem 3 students: VTU USN or UGDS ID (26UGDS1234)."
+                      ? "Sem 3 students: VTU USN or admission ID (26UGDS1234)."
                       : undefined
                 }
                 value={m.usn}
@@ -108,8 +108,8 @@ export function TeamStep({
                 autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
-                placeholder={m.semester === 1 ? "Admission ID" : "1DS23CD045"}
-                maxLength={m.semester === 1 ? 20 : 12}
+                placeholder={m.semester === 1 ? "26UGDS1234" : "1DS23CD045"}
+                maxLength={12}
               />
               <TextField
                 id={`${pre}-phone`}

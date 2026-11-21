@@ -21,12 +21,10 @@ export const normalizePhone = (v: string) => v.replace(/\D/g, "").slice(-10);
 
 // VTU-style USN: 1DS23CD045 → digit, 2 letters, 2 digits, 2 letters, 3 digits.
 const USN_RE = /^\d[A-Z]{2}\d{2}[A-Z]{2}\d{3}$/;
-// Semester 1 students don't have a USN yet; they enter their college admission ID
-// in the same field. Format isn't fixed, so allow 3–20 letters, digits, "/" or "-".
-const ADMISSION_ID_RE = /^[A-Z0-9][A-Z0-9/-]{2,19}$/;
-// Semester 3 students may also have a UGDS ID instead of a VTU USN: 26UGDS1234 →
-// 2 digits, "UGDS", 4 digits.
-const UGDS_RE = /^\d{2}UGDS\d{4}$/;
+// College admission ID (UGDS): 26UGDS1234 → 2 digits, "UGDS", 4 digits.
+// Semester 1 students don't have a USN yet, so they must enter this; semester 3
+// students may enter either this or a VTU USN.
+const ADMISSION_ID_RE = /^\d{2}UGDS\d{4}$/;
 
 /** What the ID field is called for a given semester. */
 export const idLabel = (semester: Semester | "") => (semester === 1 ? "Admission ID" : "USN");
@@ -55,9 +53,9 @@ export function validateMemberField(
       const label = idLabel(m.semester);
       if (!usn) return `${label} is required.`;
       if (m.semester === 1) {
-        if (!ADMISSION_ID_RE.test(usn)) return "Enter your admission ID (letters and numbers only).";
+        if (!ADMISSION_ID_RE.test(usn)) return "Looks wrong. Format: 26UGDS1234";
       } else if (m.semester === 3) {
-        if (!USN_RE.test(usn) && !UGDS_RE.test(usn)) return "Looks wrong. Format: 1DS23CD045 or 26UGDS1234";
+        if (!USN_RE.test(usn) && !ADMISSION_ID_RE.test(usn)) return "Looks wrong. Format: 1DS23CD045 or 26UGDS1234";
       } else if (!USN_RE.test(usn)) {
         return m.semester ? "Looks wrong. Format: 1DS23CD045" : "Looks wrong. Format: 1DS23CD045 (Sem 1: pick Semester 1 first)";
       }
